@@ -34,22 +34,6 @@ def main(args):
     save_json(results, file_path=os.path.join(ckp_path, 'res.json'))
 
     # Save organized tags as JSON
-    '''
-    organized_tags = {}
-    for idx, (pred, true) in enumerate(zip(preds, labels)):
-        tokens = testset.dataset.iloc[idx]['tokens']
-        pred_tags = [id2label[i] for i in pred]
-        true_tags = [id2label[i] for i in true]
-        organized_tags [idx] = {
-            "tokens": tokens,
-            "true_tag": true_tags,
-            "pred_tag": pred_tags,
-            "pred_idx": pred,
-            "true_idx": true
-        }
-    with open(os.path.join(ckp_path, 'tags.json'), 'w') as f:
-        json.dump(organized_tags, f, indent=4)
-    '''
     organized_tags = {}
     with open(os.path.join(ckp_path, 'tags.json'), 'w') as f:
         for idx, (pred, true) in enumerate(zip(preds, labels)):
