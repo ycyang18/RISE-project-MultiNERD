@@ -33,7 +33,7 @@ After the training is completed, the checkpoint model and logs will be stored un
 The corresponding parameters of the model will be loaded to do the testing.
 
 
-### Testing
+## Testing
 
 ```
 usage: test.py test [--ckp_name CKP_NAME] [--batch_size BATCH_SIZE]
