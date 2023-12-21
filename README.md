@@ -51,3 +51,7 @@ arguments:
   --ckp_name        Name of the checkpoint to use for testing (default: BertNERLSTM_FILTERED).
   --batch_size      Batch size for testing (default: 48).
 ```
+Upon completion of the training, the following artifacts are stored in the result/MODEL_NAME directory:
+
+1. `res.json`: Stores performance metrics evaluated on the testing data
+2. `tags.json`: Stores side-by-side comparison of the model's predicted tags against the ground truth tags
