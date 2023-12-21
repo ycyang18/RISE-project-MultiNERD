@@ -1,3 +1,5 @@
+# MultiNERD project
+
 This project is the realization of the Name Entity Recognition using the [MultiNERD](https://huggingface.co/datasets/Babelscape/multinerd?row=17) dataset.
 
 ## Installation 
