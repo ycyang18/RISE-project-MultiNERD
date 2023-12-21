@@ -29,6 +29,12 @@ arguments:
   --lr LR             Learning rate for the optimizer (default: 2e-5).
 ```
 
+You could use the nohup command to run the training in the background by:
+
+```
+nohup python train.py > nohup/train/output.out &
+```
+
 After the training is completed, the checkpoint model and logs will be stored undered the `result/MODEL_NAME` directory.
 The corresponding parameters of the model will be loaded to do the testing.
 
