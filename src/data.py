@@ -86,6 +86,66 @@ class MultiNERDDataset(Dataset):
             torch.tensor(masks, dtype=torch.long),
         ]
 
+class MultiNERDMultiTaskDataset(MultiNERDDataset):
+    def __init__(self, lang='en', split='train', label_set=ALL_TAGS, max_len=64, model_name='bert-base-uncased'):
+        MultiNERDDataset.__init__(self, lang, split, label_set, max_len, model_name)
+        self.rev_label_set = {label_set[k]: k for k in label_set} # id -> tag
+        if self.label_set == ALL_TAGS:
+            self.b_mapping = ALL_TAGS_B_BINARY
+            self.i_mapping = ALL_TAGS_I_BINARY
+            self.o_mapping = ALL_TAGS_O_BINARY
+        else:
+            self.b_mapping = SELECTED_TAGS_B_BINARY
+            self.i_mapping = SELECTED_TAGS_I_BINARY
+            self.o_mapping = SELECTED_TAGS_O_BINARY
+        self.b_labels, self.i_labels, self.o_labels = self.get_multi_task_labels(self.aligned_labels)
+
+    def get_multi_task_labels(self, aligned_labels):
+        all_b_labels, all_i_labels, all_o_labels = [], [], []
+        for labels in aligned_labels:
+            tags = [self.rev_label_set[l] for l in labels]
+            b_labels = [self.b_mapping[t] for t in tags]
+            i_labels = [self.i_mapping[t] for t in tags]
+            o_labels = [self.o_mapping[t] for t in tags]
+            all_b_labels.append(b_labels)
+            all_i_labels.append(i_labels)
+            all_o_labels.append(o_labels)
+        return (
+            all_b_labels,
+            all_i_labels,
+            all_o_labels)
+
+    def __getitem__(self, idx):
+        input_ids = self.aligned_tokens[idx]
+        labels = self.aligned_labels[idx]
+        b_labels = self.b_labels[idx]
+        i_labels = self.i_labels[idx]
+        o_labels = self.o_labels[idx]
+        if len(input_ids) >= self.max_len - 2:
+            input_ids = input_ids[:self.max_len - 2]
+        if len(labels) >= self.max_len - 2:
+            labels = labels[:self.max_len - 2]
+        input_ids = [101] + input_ids + [102]
+        labels = [0] + labels + [0]
+        b_labels = [0] + b_labels + [0]
+        i_labels = [0] + i_labels + [0]
+        o_labels = [0] + o_labels + [0]
+        ids_len = len(input_ids)
+        input_ids = pad_id(input_ids, max_len=self.max_len)
+        labels = pad_id(labels, max_len=self.max_len, padding_token=-100)
+        b_labels = pad_id(b_labels, max_len=self.max_len, padding_token=-100)
+        i_labels = pad_id(i_labels, max_len=self.max_len, padding_token=-100)
+        o_labels = pad_id(o_labels, max_len=self.max_len, padding_token=-100)
+        masks = pad_id(ids_len * [1], max_len=self.max_len)
+        return [
+            torch.tensor(input_ids, dtype=torch.long),
+            torch.tensor(labels, dtype=torch.long),
+            torch.tensor(masks, dtype=torch.long),
+            torch.tensor(b_labels, dtype=torch.long),
+            torch.tensor(i_labels, dtype=torch.long),
+            torch.tensor(o_labels, dtype=torch.long),
+        ]
+
 def prepare_loader(dataset, batch_size):
     sampler = SequentialSampler(dataset)
     dataloader = DataLoader(dataset, sampler=sampler, batch_size=batch_size)

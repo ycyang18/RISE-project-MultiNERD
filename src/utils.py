@@ -160,6 +160,32 @@ def ner_inference(model: nn.Module, dataloader, device):
     avg_loss = total_loss / len(dataloader)
     return prd_labels, all_labels, avg_loss
 
+@torch.no_grad()
+def multi_task_ner_inference(model: nn.Module, dataloader, device):
+    model.eval()
+    all_labels = []
+    prd_labels = []
+    total_loss = 0
+    for batch in dataloader:
+        batch = [t.to(device) for t in batch]
+        batch_ids, batch_labels, batch_masks, batch_b_labels, batch_i_labels, batch_o_labels = batch
+        outputs = model(
+            batch_ids, attention_mask=batch_masks,
+            labels=batch_labels,
+            b_labels=batch_b_labels,
+            i_labels=batch_i_labels,
+            o_labels=batch_o_labels)
+        loss: torch.Tensor = outputs[0]
+        total_loss += loss.item()
+        logits: torch.Tensor = outputs[1]
+        prd_ids: torch.Tensor = logits.argmax(-1) # (batch_size, max_len)
+        all_labels.append(batch_labels.to('cpu'))
+        prd_labels.append(prd_ids.to('cpu'))
+    all_labels = torch.cat(all_labels, dim=0)
+    prd_labels = torch.cat(prd_labels, dim=0)
+    avg_loss = total_loss / len(dataloader)
+    return prd_labels, all_labels, avg_loss
+
 def eval(prd_labels: torch.Tensor, all_labels: torch.Tensor):
     prd_labels = prd_labels.tolist()
     all_labels = all_labels.tolist()

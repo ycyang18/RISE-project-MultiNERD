@@ -57,5 +57,13 @@ SELECTED_TAGS = {
     'I-ANIM': 10
     }
 
+ALL_TAGS_B_BINARY = {tag: int("B-" in tag) for tag in ALL_TAGS}
+ALL_TAGS_I_BINARY = {tag: int("I-" in tag) for tag in ALL_TAGS}
+ALL_TAGS_O_BINARY = {tag: int(tag == "O")  for tag in ALL_TAGS}
+
+SELECTED_TAGS_B_BINARY = {tag: int("B-" in tag) for tag in SELECTED_TAGS}
+SELECTED_TAGS_I_BINARY = {tag: int("I-" in tag) for tag in SELECTED_TAGS}
+SELECTED_TAGS_O_BINARY = {tag: int(tag == "O")  for tag in SELECTED_TAGS}
+
 BERT_PATH = os.path.join(MODEL, 'bert-base-uncased')
 RoBERTa_PATH = os.path.join(MODEL, 'roberta-base')
