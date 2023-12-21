@@ -13,6 +13,9 @@ pip install -r requirements.txt
 
 ## Training
 
+`train.py` uses a Transformer-based encoder fine-tuned with single layer classifier
+`train_multi.py` uses a Transformer-based encoder fine-tuned with multiple tasks
+
 ```
 usage: train.py train [--seed SEED] [--exp_type {ALL,FILTERED}]
                       [--model_name MODEL_NAME] [--max_len MAX_LEN]
@@ -22,8 +25,8 @@ usage: train.py train [--seed SEED] [--exp_type {ALL,FILTERED}]
 arguments:
   --seed SEED         Set the random seed for reproducibility (default: 42).
   --exp_type          Specify the experiment type: ALL or FILTERED (default: ALL).
-  --model_name        Choose the model type. Options are 'BertNEROriginal', 'BertNERLSTM', 
-                      'RoBERTaNEROriginal' (default: BertNERLSTM).
+  --model_name        Choose the model type. Options are 'BertNEROriginal', 'BertNERMultiTask'
+                      'BertNERLSTM', 'RoBERTaNEROriginal' (default: BertNERLSTM).
                         
   --max_len           Maximum length for tokenization (default: 42).
   --num_epoch         Number of epochs for training (default: 3).
