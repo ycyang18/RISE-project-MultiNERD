@@ -35,9 +35,12 @@ You could use the nohup command to run the training in the background by:
 nohup python train.py > nohup/train/output.out &
 ```
 
-After the training is completed, the checkpoint model and logs will be stored undered the `result/MODEL_NAME` directory.
-The corresponding parameters of the model will be loaded to do the testing.
+Upon completion of the training, the following artifacts are stored in the `result/MODEL_NAME` directory:
 
+1. `args.json`: Contains the configuration and arguments used during the training session, which will be loaded to do the testing
+2. `logs.tsv`: Records the training logs and tracks the progression of key metrics at various stages
+3. `model.pkl`: Model checkpoint
+   
 
 ## Testing
 
