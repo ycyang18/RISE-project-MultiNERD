@@ -1,9 +1,0 @@
-{
-    "seed": 42,
-    "exp_type": "FILTERED",
-    "model_name": "RoBERTaNEROriginal",
-    "max_len": 42,
-    "num_epoch": 3,
-    "batch_size": 32,
-    "lr": 2e-05
-}
