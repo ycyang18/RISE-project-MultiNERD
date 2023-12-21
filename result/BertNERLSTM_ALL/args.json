@@ -1,0 +1,9 @@
+{
+    "seed": 42,
+    "exp_type": "ALL",
+    "model_name": "BertNERLSTM",
+    "max_len": 72,
+    "num_epoch": 5,
+    "batch_size": 32,
+    "lr": 2e-05
+}
